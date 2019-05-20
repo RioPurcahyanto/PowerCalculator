@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Power Calculator</string>
+    <string name="logo_pnj">Logo PNJ</string>
+    <string name="welcome_message">Program Studi Broadband Multimedia\nJurusan Teknik Elektro\nPoliteknik Negeri Jakarta
+    </string>
+    <string name="logo_broadband">Logo Broadband</string>
+    <string name="button_calculator">Penghitung</string>
+    <string name="button_history">Riwayat</string>
+    <string name="button_reference">Referensi</string>
+
+    <string-array name="list_configuration">
+        <item>1:4:8</item>
+        <item>1:4</item>
+        <item>1:2</item>
+    </string-array>
+
+    <string name="fiber_reference">
+        https://drive.google.com/file/d/1B4eLM82YC1X4mU-fDyv8rxSwUW0dCFDB/view?usp=sharing
+    </string>
+
+    <string name="lossfiber_reference">
+        https://drive.google.com/file/d/1yy3Iu4luo9cI0K_ZPzDTGfUzUAXYEbmM/view?usp=sharing
+    </string>
+
+    <string name="splices_reference">
+        https://drive.google.com/file/d/1WOmnkBXMTyUmpkmtrbpV8orDRlsua8M-/view?usp=sharing
+    </string>
+
+    <string name="connector_reference">
+        https://drive.google.com/file/d/1SEvE0omz5BR_PMzeshvn4Rp1hSxoo_FW/view?usp=sharing
+    </string>
+    <string name="input_power_transmitter_dbm">Masukkan Power Transmitter (dBm)</string>
+    <string name="input_fiber_length">Masukkan Panjang Kabel (KM)</string>
+    <string name="input_connector">Masukkan Jumlah Konektor</string>
+    <string name="n_connector">jumlah dalam pasangan</string>
+    <string name="power_splitter_used">Power Splitter yang digunakan :</string>
+    <string name="calculate_btn">Hitung</string>
+    <string name="gpon_configuration">Konfigurasi GPON</string>
+    <string name="configurationChoice">Pilih Konfigurasi</string>
+    <string name="checkPowerTransmitter">Harap Periksa Power Transmitter</string>
+    <string name="checkFiberLength">Harap Periksa Panjang Fiber</string>
+    <string name="checkTotalSplices">Harap Periksa Jumlah Splices</string>
+    <string name="checkTotalConnector">Harap Periksa Jumlah Konektor</string>
+    <string name="checkNetworkConfig">Pilih Konfigurasi GPON</string>
+    <string name="spasiDBM"> dBm</string>
+    <string name="spasiKMspasiXspasi"> KM X </string>
+    <string name="spasiDBperKMnewLine"> dB/KM \n Hasil = </string>
+    <string name="spasiXspasi"> X </string>
+    <string name="spasidBperpairnewLine"> dB/pasang \n Hasil = </string>
+    <string name="spasidbpersplicesnewline"> dB/Splice \n Hasil = </string>
+    <string name="resultView">Hasil = </string>
+    <string name="input_splicing">Masukkan Jumlah Splicing</string>
+    <string name="result_text_configuration">konfigurasi</string>
+    <string name="result_text_power_transmitter">Power Transmitter</string>
+    <string name="result_loss_fiber">Loss pada Fiber Optik</string>
+    <string name="result_loss_connector">Loss pada Konektor</string>
+    <string name="result_loss_splices">Loss pada Splices</string>
+    <string name="result_loss_powersplitter">Loss pada Power Splitter</string>
+    <string name="total_loss">Total Loss</string>
+    <string name="text_capture">Ambil Foto</string>
+    <string name="take_screenshot">Tangkap Layar</string>
+</resources>

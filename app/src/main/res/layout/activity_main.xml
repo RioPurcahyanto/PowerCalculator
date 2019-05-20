@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:orientation="vertical"
+            tools:context=".MainActivity">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="16dp"
+                android:outlineProvider="bounds">
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/gpon_configuration"
+                    android:paddingLeft="8dp"
+                    android:background="@drawable/custom_border_for_image"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="4dp"
+            />
+            <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/spinner_konfig"
+                    >
+            </Spinner>
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:outlineProvider="bounds">
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/input_power_transmitter_dbm"
+                    android:background="@drawable/custom_border_for_image"
+                    android:textStyle="bold"
+                    android:paddingLeft="8dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="4dp"
+            />
+
+            <EditText
+                    android:id="@+id/edit_powerTransmitter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="0.0"
+                    android:inputType="numberDecimal"
+                    android:paddingLeft="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:outlineProvider="bounds">
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/input_fiber_length"
+                    android:background="@drawable/custom_border_for_image"
+                    android:textStyle="bold"
+                    android:paddingLeft="8dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="4dp"
+            />
+
+            <EditText
+                    android:id="@+id/edit_panjang"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="0.0"
+                    android:inputType="numberDecimal"
+                    android:paddingLeft="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:outlineProvider="bounds">
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/input_connector"
+                    android:paddingLeft="8dp"
+                    android:background="@drawable/custom_border_for_image"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="4dp"
+            />
+
+            <EditText
+                    android:id="@+id/edit_connector"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/n_connector"
+                    android:inputType="number"
+                    android:paddingLeft="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:outlineProvider="bounds">
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/input_splicing"
+                    android:paddingLeft="8dp"
+                    android:background="@drawable/custom_border_for_image"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="4dp"
+            />
+
+            <EditText
+                    android:id="@+id/edit_splicing"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="0"
+                    android:inputType="number"
+                    android:paddingLeft="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:outlineProvider="bounds">
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/power_splitter_used"
+                    android:paddingLeft="8dp"
+                    android:background="@drawable/custom_border_for_image"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="4dp"
+            />
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Power Splitter 1 to N"
+                    android:id="@+id/tv_power_splitter"
+                    android:textSize="16sp"
+                    android:paddingLeft="8dp"/>
+        </LinearLayout>
+
+        <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/custom_border_button"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:id="@+id/btn_hitung"
+                android:text="@string/calculate_btn"
+                android:layout_gravity="bottom"/>
+    </LinearLayout>
+</ScrollView>

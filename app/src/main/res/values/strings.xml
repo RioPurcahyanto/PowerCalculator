@@ -1,0 +1,63 @@
+<resources>
+    <string name="app_name">Power Calculator</string>
+    <string name="logo_pnj">Logo PNJ</string>
+    <string name="welcome_message">Broadband Multimedia Study Program\nElectrical Engineering\nPolytechnic State of
+        Jakarta
+    </string>
+    <string name="logo_broadband">Logo Broadband</string>
+    <string name="button_calculator">Calculator</string>
+    <string name="button_history">History</string>
+    <string name="button_reference">Reference</string>
+
+    <string-array name="list_configuration">
+        <item>1:4:8</item>
+        <item>1:4</item>
+        <item>1:2</item>
+    </string-array>
+
+    <string name="fiber_reference">
+        https://drive.google.com/file/d/1B4eLM82YC1X4mU-fDyv8rxSwUW0dCFDB/view?usp=sharing
+    </string>
+
+    <string name="lossfiber_reference">
+        https://drive.google.com/file/d/1yy3Iu4luo9cI0K_ZPzDTGfUzUAXYEbmM/view?usp=sharing
+    </string>
+
+    <string name="splices_reference">
+        https://drive.google.com/file/d/1WOmnkBXMTyUmpkmtrbpV8orDRlsua8M-/view?usp=sharing
+    </string>
+
+    <string name="connector_reference">
+        https://drive.google.com/file/d/1SEvE0omz5BR_PMzeshvn4Rp1hSxoo_FW/view?usp=sharing
+    </string>
+    <string name="gpon_configuration">GPON Configuration</string>
+    <string name="input_power_transmitter_dbm">Input Power Transmitter (dBm)</string>
+    <string name="input_fiber_length">Input Fiber Length (KM)</string>
+    <string name="input_connector">Input Number of Connector</string>
+    <string name="n_connector">In Pairs</string>
+    <string name="power_splitter_used">Power Splitter Used :</string>
+    <string name="calculate_btn">Calculate</string>
+    <string name="configurationChoice">Choose your Configuration</string>
+    <string name="checkPowerTransmitter">Please Check Your Power Transmitter</string>
+    <string name="checkFiberLength">Please Check Your Fibre Length</string>
+    <string name="checkTotalSplices">Please Check Your Total Splices</string>
+    <string name="checkTotalConnector">Please Check Your Total Connector</string>
+    <string name="checkNetworkConfig">Please Choose Your Network Configuration</string>
+    <string name="spasiDBM">dBm</string>
+    <string name="spasiKMspasiXspasi">KM X</string>
+    <string name="spasiDBperKMnewLine">dB/KM \n Result =</string>
+    <string name="spasiXspasi">X</string>
+    <string name="spasidBperpairnewLine">dB/pairs \n Result =</string>
+    <string name="spasidbpersplicesnewline">dB/Splice \n Result =</string>
+    <string name="resultView">Result =</string>
+    <string name="input_splicing">Input Number of Splicing</string>
+    <string name="result_text_configuration">Configuration</string>
+    <string name="result_text_power_transmitter">Power Transmitter</string>
+    <string name="result_loss_fiber">Loss in Optical Fibre</string>
+    <string name="result_loss_connector">Loss in Connector</string>
+    <string name="result_loss_splices">Loss in Splices</string>
+    <string name="result_loss_powersplitter">Loss in Power Splitter</string>
+    <string name="total_loss">Total Loss</string>
+    <string name="text_capture">Take a Picture</string>
+    <string name="take_screenshot">Take a Screenshot</string>
+</resources>

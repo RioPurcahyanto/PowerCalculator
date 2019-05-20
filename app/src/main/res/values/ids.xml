@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="power_transmitter_saved" type="id"/>
+    <item name="panjang_fiber_saved" type="id"/>
+    <item name="total_connector_saved" type="id"/>
+    <item name="total_splices_saved" type="id"/>
+    <item name="gpon_config_saved" type="id"/>
+</resources>
