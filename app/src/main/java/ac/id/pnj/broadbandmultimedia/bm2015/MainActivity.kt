@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity() {
     var totalSplices: String = ""
     var totalConnector: String = ""
     var randomIdGenerated: String= ""
+    var powerSplitterUsed:String=""
 
 
 
@@ -35,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val randomId = (1..1000).random()
+        val randomId = (1 until 100).random()
         val spinnerItems = resources.getStringArray(R.array.list_configuration)
         val spinnerAdapter =
             ArrayAdapter(applicationContext, android.R.layout.simple_spinner_dropdown_item, spinnerItems)
@@ -62,6 +63,8 @@ class MainActivity : AppCompatActivity() {
             totalSplices = edit_splicing.text.toString()
             totalConnector = edit_connector.text.toString()
             randomIdGenerated =randomId.toString()
+            powerSplitterUsed = tv_power_splitter.text.toString()
+
 
             if (powerTransmitter.isEmpty()){
                 toast(resources.getString(R.string.checkPowerTransmitter))
@@ -88,6 +91,7 @@ class MainActivity : AppCompatActivity() {
                 sendData.putExtra("panjangFiberIntent",panjangFiber)
                 sendData.putExtra("totalSplicesIntent", totalSplices)
                 sendData.putExtra("totalConnectorIntent", totalConnector)
+                sendData.putExtra("powerSplitterUsedIntent",powerSplitterUsed)
                 startActivity(sendData)
             }
 

@@ -251,5 +251,18 @@
                 android:text="@string/take_screenshot"
                 android:id="@+id/btn_screenshot"
         />
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:padding="8dp"
+                android:background="@drawable/custom_border_button"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:text="@string/save_and_print"
+                android:id="@+id/btn_print"
+        />
     </LinearLayout>
 </ScrollView>

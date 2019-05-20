@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths xmlns:android="http://schemas.android.com/apk/res/android">
-    <external-path name="my_files" path="Android/data/ac.id.pnj.broadbandmultimedia.bm2015/files/Exported" />
+    <external-path name="my_images" path="Android/data/ac.id.pnj.broadbandmultimedia.bm2015/files/Pictures" />
 </paths>

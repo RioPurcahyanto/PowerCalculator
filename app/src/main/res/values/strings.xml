@@ -60,4 +60,5 @@
     <string name="total_loss">Total Loss</string>
     <string name="text_capture">Take a Picture</string>
     <string name="take_screenshot">Take a Screenshot</string>
+    <string name="save_and_print">Save and Print</string>
 </resources>

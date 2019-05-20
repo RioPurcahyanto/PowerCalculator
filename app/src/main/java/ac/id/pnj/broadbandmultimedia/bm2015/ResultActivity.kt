@@ -13,6 +13,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -39,34 +40,37 @@ import org.jetbrains.anko.find
 import org.jetbrains.anko.sdk27.coroutines.onClick
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
+import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 class ResultActivity : AppCompatActivity() {
     private lateinit var photoView: ImageView
     private lateinit var buttonPhoto: Button
+    private lateinit var buttonPrint: Button
     private var photoFile: File? = null
     private var CAPTURE_IMAGE_REQUEST = 1
     private lateinit var photoPath: String
     private val IMAGE_DIRECTORY_NAME = "SAVED_PHOTO"
 
-    private lateinit var scrollView:ScrollView
-    private lateinit var btnScreenshot:Button
+    private val CSV_HEADER = "no,parameter,value"
+    private var csvFile: File? = null
+    private lateinit var csvFilePath: String
+
+    private lateinit var scrollView: ScrollView
+    private lateinit var btnScreenshot: Button
 
     private var menuItem: Menu? = null
     private var isFavorite: Boolean = false
 
-    var powerTransmitterReceived:String = ""
-    var panjangFiberReceived:String =""
-    var totalSplicesReceived:String =""
-    var totalConnectorReceived:String =""
-    var networkConfigurationReceived:String =""
-    var randomIdReceived:String = ""
-    var photoUriReceived:String? = ""
+    var powerTransmitterReceived: String = ""
+    var panjangFiberReceived: String = ""
+    var totalSplicesReceived: String = ""
+    var totalConnectorReceived: String = ""
+    var networkConfigurationReceived: String = ""
+    var randomIdReceived: String = ""
+    var photoUriReceived: String? = ""
+    var powerSplitterUsedReceived: String = ""
 
     var powerTransmitterDouble: Double = 0.0
     var panjangFiberDouble: Double = 0.0
@@ -85,18 +89,18 @@ class ResultActivity : AppCompatActivity() {
     val lossSplitter1to4 = 7.6
     val lossSplitter1to8 = 11.0
 
+    var totalLossFiber: Double = 0.0
+    var totalLossConnector: Double = 0.0
+    var totalLossSplicing: Double = 0.0
+    var totalLossSplitter: Double = 0.0
+    var totalLossPure: Double = 0.0
+    var totalLossResult: Double = 0.0
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result)
-        val rootView = window.decorView.findViewById<View>(android.R.id.content)
-        //for taking screenshot
-        scrollView = find(R.id.scroll_view)
-        btnScreenshot = find(R.id.btn_screenshot)
 
-        btnScreenshot.onClick {
-            var bitmap:Bitmap = getBitmapFromView(scrollView, scrollView.getChildAt(0).height,
-                scrollView.getChildAt(0).height)
-        }
         //for taking a photo
         photoView = find(R.id.img_photo)
         buttonPhoto = find(R.id.btn_take_photo)
@@ -113,24 +117,28 @@ class ResultActivity : AppCompatActivity() {
         networkConfigurationReceived = sendData.getStringExtra("networkConfigurationIntent")
         randomIdReceived = sendData.getStringExtra("randomIdIntent")
         photoUriReceived = sendData.getStringExtra("photoUriIntent")
+        powerSplitterUsedReceived = sendData.getStringExtra("powerSplitterUsedIntent")
 
+        supportActionBar?.setTitle("ID Result : " + randomIdReceived)
         //to load image from database
         Glide.with(applicationContext).load(photoUriReceived).into(photoView)
 
 
-        if(networkConfigurationReceived.equals("1:4:8")){
+
+
+        if (networkConfigurationReceived.equals("1:4:8")) {
             splitter1 = 1.0
             splitter2 = 1.0
             totalLossSplitter1 = splitter1.times(lossSplitter1to4)
             totalLossSplitter2 = splitter2.times(lossSplitter1to8)
         }
-        if (networkConfigurationReceived.equals("1:4")){
+        if (networkConfigurationReceived.equals("1:4")) {
             splitter1 = 1.0
             splitter2 = 0.0
             totalLossSplitter1 = splitter1.times(lossSplitter1to4)
             totalLossSplitter2 = splitter2
         }
-        if(networkConfigurationReceived.equals("1:2")){
+        if (networkConfigurationReceived.equals("1:2")) {
             splitter1 = 1.0
             splitter2 = 0.0
             totalLossSplitter1 = splitter1.times(lossSplitter1to2)
@@ -142,44 +150,67 @@ class ResultActivity : AppCompatActivity() {
         totalConnectorDouble = totalConnectorReceived.toDouble()
         totalSplicesDouble = totalSplicesReceived.toDouble()
 
-        var totalLossFiber:Double = panjangFiberDouble.times(lossFiber)
-        var totalLossConnector: Double = totalConnectorDouble.times(lossConnector)
-        var totalLossSplicing: Double = totalSplicesDouble.times(lossSplices)
-        var totalLossSplitter:Double = totalLossSplitter1.plus(totalLossSplitter2)
-        var totalLossPure:Double = totalLossConnector.plus(totalLossFiber).plus(totalLossSplitter).plus(totalLossSplicing)
-        var totalLossResult: Double = powerTransmitterDouble.minus(totalLossPure)
+        totalLossFiber = panjangFiberDouble.times(lossFiber)
+        totalLossConnector = totalConnectorDouble.times(lossConnector)
+        totalLossSplicing = totalSplicesDouble.times(lossSplices)
+        totalLossSplitter = totalLossSplitter1.plus(totalLossSplitter2)
+        totalLossPure = totalLossConnector.plus(totalLossFiber).plus(totalLossSplitter).plus(totalLossSplicing)
+        totalLossResult = powerTransmitterDouble.minus(totalLossPure)
 
-        val printPowerTransmitter:String = powerTransmitterReceived + resources.getString(R.string.spasiDBM)
-        val printLossFiber:String = panjangFiberReceived + resources.getString(R.string.spasiKMspasiXspasi)+ lossFiber.toString() + resources.getString(R.string.spasiDBperKMnewLine)+ totalLossFiber.toString()
-        val printLossConnector:String = totalConnectorReceived.toString() + resources.getString(R.string.spasiXspasi)+ lossConnector.toString() + resources.getString(R.string.spasidBperpairnewLine)+ totalLossConnector.toString()
-        val printLossSplices:String = totalSplicesReceived.toString()  + resources.getString(R.string.spasiXspasi) + lossSplices.toString() + resources.getString(R.string.spasidbpersplicesnewline) + totalLossSplicing.toString()
-        val printLossSplitter: String = "Splitter 1 = "+ totalLossSplitter1+"\n"+"Splitter 2 = "+totalLossSplitter2 + "\n"+ resources.getString(R.string.resultView)+ totalLossSplitter
-        val printTotal:String = "= Power Transmitter - Total Loss \n" +
-                "= Power Transmitter - ("+ resources.getString(R.string.result_loss_fiber)+" - "+ resources.getString(R.string.result_loss_connector) +" - "+ resources.getString(R.string.result_loss_splices)+" - Loss Splitter) \n"+
-                "= "+ powerTransmitterReceived.toString() + " - " + totalLossPure.toString() + "\n " +
-                "= "+ powerTransmitterReceived.toString() + " - (" + totalLossFiber.toString() +" - " + totalLossConnector.toString() + " - " + totalLossSplicing.toString() + " - " +
-                totalLossSplitter.toString() +")\n" +
-                "\n"+ resources.getString(R.string.resultView) + totalLossResult.toString() + " dB"
+        val printPowerTransmitter: String = powerTransmitterReceived + resources.getString(R.string.spasiDBM)
+        val printLossFiber: String =
+            panjangFiberReceived + resources.getString(R.string.spasiKMspasiXspasi) + lossFiber.toString() + resources.getString(
+                R.string.spasiDBperKMnewLine
+            ) + totalLossFiber.toString()
+        val printLossConnector: String =
+            totalConnectorReceived.toString() + resources.getString(R.string.spasiXspasi) + lossConnector.toString() + resources.getString(
+                R.string.spasidBperpairnewLine
+            ) + totalLossConnector.toString()
+        val printLossSplices: String =
+            totalSplicesReceived.toString() + resources.getString(R.string.spasiXspasi) + lossSplices.toString() + resources.getString(
+                R.string.spasidbpersplicesnewline
+            ) + totalLossSplicing.toString()
+        val printLossSplitter: String =
+            "Splitter 1 = " + totalLossSplitter1 + "\n" + "Splitter 2 = " + totalLossSplitter2 + "\n" + resources.getString(
+                R.string.resultView
+            ) + totalLossSplitter
+        val printTotal: String = "= Power Transmitter - Total Loss \n" +
+                "= Power Transmitter - (" + resources.getString(R.string.result_loss_fiber) + " - " + resources.getString(
+            R.string.result_loss_connector
+        ) + " - " + resources.getString(R.string.result_loss_splices) + " - Loss Splitter) \n" +
+                "= " + powerTransmitterReceived.toString() + " - " + totalLossPure.toString() + "\n " +
+                "= " + powerTransmitterReceived.toString() + " - (" + totalLossFiber.toString() + " - " + totalLossConnector.toString() + " - " + totalLossSplicing.toString() + " - " +
+                totalLossSplitter.toString() + ")\n" +
+                "\n" + resources.getString(R.string.resultView) + totalLossResult.toString() + " dB"
         tv_konfigurasi.text = networkConfigurationReceived
         tv_power_transmitter.text = printPowerTransmitter
-        tv_loss_fiber_optik.text =printLossFiber
-        tv_loss_connector.text =  printLossConnector
+        tv_loss_fiber_optik.text = printLossFiber
+        tv_loss_connector.text = printLossConnector
         tv_loss_splices.text = printLossSplices
         tv_loss_power_splitter.text = printLossSplitter
         tv_total_loss.text = printTotal
 
         favoriteState()
+
+        //for printing data
+
+        buttonPrint = find(R.id.btn_print)
+        buttonPrint.onClick {
+            printFile()
+        }
+
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.star_menu,menu)
+        menuInflater.inflate(R.menu.star_menu, menu)
         menuItem = menu
         setFavorite()
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId){
+        return when (item.itemId) {
             R.id.add_to_database -> {
                 if (isFavorite) removeFromSaved() else addToSaved()
                 isFavorite = !isFavorite
@@ -191,7 +222,7 @@ class ResultActivity : AppCompatActivity() {
         }
     }
 
-    private fun addToSaved(){
+    private fun addToSaved() {
         try {
             database.use {
                 insert(
@@ -199,30 +230,34 @@ class ResultActivity : AppCompatActivity() {
                     SavedResult.RANDOM_ID to randomIdReceived,
                     SavedResult.CONFIGURATION_GPON to networkConfigurationReceived,
                     SavedResult.POWER_TRANSMITTER to powerTransmitterReceived,
-                SavedResult.FIBER_LENGTH to panjangFiberReceived,
-                SavedResult.CONNECTOR_NUMBER to totalConnectorReceived,
+                    SavedResult.FIBER_LENGTH to panjangFiberReceived,
+                    SavedResult.CONNECTOR_NUMBER to totalConnectorReceived,
                     SavedResult.SPLICING_NUMBER to totalSplicesReceived,
                     SavedResult.PHOTO_URI to photoUriReceived
-                    )           }
+                )
+            }
             tv_total_loss.snackbar("Saved").show()
-        }catch (e: SQLiteConstraintException){
+        } catch (e: SQLiteConstraintException) {
             tv_total_loss.snackbar(e.localizedMessage).show()
         }
     }
 
-    private fun removeFromSaved(){
+    private fun removeFromSaved() {
         try {
             database.use {
-                delete(SavedResult.TABLE_SAVED,"(RANDOM_ID = {randomIdReceived})",
-                    "randomIdReceived" to randomIdReceived)
+                delete(
+                    SavedResult.TABLE_SAVED, "(RANDOM_ID = {randomIdReceived})",
+                    "randomIdReceived" to randomIdReceived
+                )
             }
             photoFile?.delete()
             tv_total_loss.snackbar("Removed from Saved").show()
-        } catch ( e: SQLiteConstraintException){
+        } catch (e: SQLiteConstraintException) {
             tv_total_loss.snackbar(e.localizedMessage).show()
         }
 
     }
+
     private fun setFavorite() {
         if (isFavorite)
             menuItem?.getItem(0)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_added_database)
@@ -230,39 +265,46 @@ class ResultActivity : AppCompatActivity() {
             menuItem?.getItem(0)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_add_database)
     }
 
-    private fun favoriteState(){
+    private fun favoriteState() {
         database.use {
             val result = select(SavedResult.TABLE_SAVED)
-                .whereArgs("(RANDOM_ID = {randomIdReceived})",
-                    "randomIdReceived" to randomIdReceived)
+                .whereArgs(
+                    "(RANDOM_ID = {randomIdReceived})",
+                    "randomIdReceived" to randomIdReceived
+                )
             val favorite = result.parseList(classParser<SavedResult>())
             if (!favorite.isEmpty()) isFavorite = true
         }
     }
 
-    fun captureImage(){
-        if (ContextCompat.checkSelfPermission(this,Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE), 0)
+    fun captureImage() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                0
+            )
         } else {
             val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            if (takePictureIntent.resolveActivity(packageManager) != null){
+            if (takePictureIntent.resolveActivity(packageManager) != null) {
                 try {
                     photoFile = createImageFile()
                     displayMessage(baseContext, photoFile!!.absolutePath)
-                    Log.i("Test",photoFile!!.absolutePath)
+                    Log.i("Test", photoFile!!.absolutePath)
 
-                    if (photoFile != null){
-                        var photoURI = FileProvider.getUriForFile(this,
+                    if (photoFile != null) {
+                        var photoURI = FileProvider.getUriForFile(
+                            this,
                             "ac.id.pnj.broadbandmultimedia.bm2015.fileprovider", photoFile!!
                         )
                         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                        startActivityForResult(takePictureIntent,CAPTURE_IMAGE_REQUEST)
+                        startActivityForResult(takePictureIntent, CAPTURE_IMAGE_REQUEST)
                     }
-                }catch (ex:Exception){
-                    displayMessage(baseContext,"Capture Image Bug: "+ex.message.toString())
+                } catch (ex: Exception) {
+                    displayMessage(baseContext, "Capture Image Bug: " + ex.message.toString())
                 }
-            }else{
-                displayMessage(baseContext,"Null")
+            } else {
+                displayMessage(baseContext, "Null")
             }
         }
     }
@@ -302,25 +344,95 @@ class ResultActivity : AppCompatActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         if (requestCode == 0) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                && grantResults[1] == PackageManager.PERMISSION_GRANTED
+            ) {
                 captureImage()
             }
         }
 
     }
 
-    private fun getBitmapFromView(view:View, height:Int,width:Int): Bitmap {
-        val bitmap:Bitmap = Bitmap.createBitmap(width, height,Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        val bgDrawable:Drawable? = view.background
-        if(bgDrawable != null){
-            bgDrawable.draw(canvas)
+
+    fun printFile() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                0
+            )
+        } else {
+            val sendEmailIntent = Intent()
+            if (sendEmailIntent.resolveActivity(packageManager) != null) {
+                try {
+                    csvFile = createCsvFile()
+                    displayMessage(baseContext, csvFile!!.absolutePath)
+                    Log.i("Test", csvFile!!.absolutePath)
+
+                    if (csvFile != null) {
+                        var fileCsvUri = FileProvider.getUriForFile(
+                            this,
+                            "ac.id.pnj.broadbandmultimedia.bm2015.fileprovider", csvFile!!
+                        )
+                        sendEmailIntent.action = Intent.ACTION_SEND
+                        sendEmailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                        sendEmailIntent.putExtra(Intent.EXTRA_STREAM, fileCsvUri)
+                        sendEmailIntent.type = "text/csv"
+                        startActivity(Intent.createChooser(sendEmailIntent, "SHARE - SAVE - PRINT"))
+                    }
+                } catch (ex: Exception) {
+                    displayMessage(baseContext, "Capture File Bug: " + ex.message.toString())
+                }
+
+            }
         }
-        else
-            canvas.drawColor(Color.WHITE)
-        view.draw(canvas)
-        return bitmap
     }
 
-    
+    @Throws(IOException::class)
+    private fun createCsvFile(): File {
+        val parameters = Arrays.asList(
+            Parameter("1", "GPON Configuration", this.networkConfigurationReceived),
+            Parameter("2", "Power Transmitter", this.powerTransmitterReceived),
+            Parameter("3", "Fibre Optic Length", this.panjangFiberReceived),
+            Parameter("4", "Connector", this.totalConnectorReceived),
+            Parameter("5", "Splices", this.totalSplicesReceived),
+            Parameter("6", "Power Splitter", this.powerSplitterUsedReceived),
+            Parameter("7", "Optical Fiber Loss", totalLossFiber.toString()),
+            Parameter("8", "Connector Loss", totalLossConnector.toString()),
+            Parameter("9", "Splicing Loss", totalLossSplicing.toString()),
+            Parameter("10", "Splitter Loss", totalLossSplitter.toString()),
+            Parameter("11", "Total Loss", totalLossPure.toString()),
+            Parameter("12", "Power Received", totalLossResult.toString())
+        )
+        // Create an csv file name
+        val csvFileName = "gpon_" + randomIdReceived + "_"
+        val storageCsvDir = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
+        val GPONData = File.createTempFile(csvFileName, ".csv", storageCsvDir)
+        var writer: FileWriter? = null
+        try {
+            writer = FileWriter("gpon-" + randomIdReceived + ".csv")
+            writer.append(CSV_HEADER)
+            writer.append("\n")
+
+            for (parameter in parameters) {
+                writer.append(parameter.numberId)
+                writer.append(parameter.parameter)
+                writer.append(parameter.parValue)
+                writer.append("\n")
+            }
+            toast("Success").show()
+        } catch (e: Exception) {
+            toast("Failed").show()
+            e.printStackTrace()
+        } finally {
+            try {
+                writer?.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+            // Save a file: path for use with ACTION_VIEW intents
+            csvFilePath = GPONData.absolutePath
+            return GPONData
+
+        }
+    }
 }

@@ -60,4 +60,5 @@
     <string name="total_loss">Total Loss</string>
     <string name="text_capture">Ambil Foto</string>
     <string name="take_screenshot">Tangkap Layar</string>
+    <string name="save_and_print">Simpan dan Cetak</string>
 </resources>
