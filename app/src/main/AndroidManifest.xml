@@ -31,15 +31,7 @@
                     android:name="android.support.FILE_PROVIDER_PATHS"
                     android:resource="@xml/image_path"/>
         </provider>
-        <!--<provider-->
-                <!--android:name="android.support.v4.content.FileProvider"-->
-                <!--android:authorities="ac.id.pnj.broadbandmultimedia.bm2015.fileprovider"-->
-                <!--android:exported="false"-->
-                <!--android:grantUriPermissions="true">-->
-            <!--<meta-data-->
-                    <!--android:name="android.support.FILE_PROVIDER_PATHS"-->
-                    <!--android:resource="@xml/file_path"/>-->
-        <!--</provider>-->
+
 
         <activity android:name=".SavedActivity">
         </activity>

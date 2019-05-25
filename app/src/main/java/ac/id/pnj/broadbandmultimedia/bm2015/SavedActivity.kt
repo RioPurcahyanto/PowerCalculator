@@ -55,6 +55,7 @@ class SavedActivity : AppCompatActivity() {
             sendData.putExtra("totalSplicesIntent",it.numberOfSplicing)
             sendData.putExtra("totalConnectorIntent",it.numberOfConnector)
             sendData.putExtra("photoUriIntent",it.photoUri)
+            sendData.putExtra("powerSplitterUsedIntent",it.powerSplitterUsed)
             startActivity(sendData)
         }
         listResult.adapter = adapter

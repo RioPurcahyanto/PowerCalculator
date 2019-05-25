@@ -8,16 +8,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.sqlite.SQLiteConstraintException
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
+import android.os.StrictMode
 import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
@@ -25,11 +21,12 @@ import android.support.v4.content.FileProvider
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.ScrollView
 import com.bumptech.glide.Glide
+import com.opencsv.CSVWriter
+import com.opencsv.bean.StatefulBeanToCsv
 import kotlinx.android.synthetic.main.activity_result.*
 import org.jetbrains.anko.db.classParser
 import org.jetbrains.anko.db.delete
@@ -38,7 +35,6 @@ import org.jetbrains.anko.db.select
 import org.jetbrains.anko.design.snackbar
 import org.jetbrains.anko.find
 import org.jetbrains.anko.sdk27.coroutines.onClick
-import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 import java.io.*
 import java.text.SimpleDateFormat
@@ -53,9 +49,8 @@ class ResultActivity : AppCompatActivity() {
     private lateinit var photoPath: String
     private val IMAGE_DIRECTORY_NAME = "SAVED_PHOTO"
 
-    private val CSV_HEADER = "no,parameter,value"
-    private var csvFile: File? = null
-    private lateinit var csvFilePath: String
+    val CSV_HEADER = "No \tParameter \tValue"
+
 
     private lateinit var scrollView: ScrollView
     private lateinit var btnScreenshot: Button
@@ -70,7 +65,7 @@ class ResultActivity : AppCompatActivity() {
     var networkConfigurationReceived: String = ""
     var randomIdReceived: String = ""
     var photoUriReceived: String? = ""
-    var powerSplitterUsedReceived: String = ""
+    var powerSplitterUsedReceived: String? = ""
 
     var powerTransmitterDouble: Double = 0.0
     var panjangFiberDouble: Double = 0.0
@@ -100,6 +95,8 @@ class ResultActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result)
+
+
 
         //for taking a photo
         photoView = find(R.id.img_photo)
@@ -193,7 +190,6 @@ class ResultActivity : AppCompatActivity() {
         favoriteState()
 
         //for printing data
-
         buttonPrint = find(R.id.btn_print)
         buttonPrint.onClick {
             printFile()
@@ -233,7 +229,8 @@ class ResultActivity : AppCompatActivity() {
                     SavedResult.FIBER_LENGTH to panjangFiberReceived,
                     SavedResult.CONNECTOR_NUMBER to totalConnectorReceived,
                     SavedResult.SPLICING_NUMBER to totalSplicesReceived,
-                    SavedResult.PHOTO_URI to photoUriReceived
+                    SavedResult.PHOTO_URI to photoUriReceived,
+                    SavedResult.POWER_SPLITTERUSED to powerSplitterUsedReceived
                 )
             }
             tv_total_loss.snackbar("Saved").show()
@@ -354,48 +351,14 @@ class ResultActivity : AppCompatActivity() {
 
 
     fun printFile() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                0
-            )
-        } else {
-            val sendEmailIntent = Intent()
-            if (sendEmailIntent.resolveActivity(packageManager) != null) {
-                try {
-                    csvFile = createCsvFile()
-                    displayMessage(baseContext, csvFile!!.absolutePath)
-                    Log.i("Test", csvFile!!.absolutePath)
-
-                    if (csvFile != null) {
-                        var fileCsvUri = FileProvider.getUriForFile(
-                            this,
-                            "ac.id.pnj.broadbandmultimedia.bm2015.fileprovider", csvFile!!
-                        )
-                        sendEmailIntent.action = Intent.ACTION_SEND
-                        sendEmailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                        sendEmailIntent.putExtra(Intent.EXTRA_STREAM, fileCsvUri)
-                        sendEmailIntent.type = "text/csv"
-                        startActivity(Intent.createChooser(sendEmailIntent, "SHARE - SAVE - PRINT"))
-                    }
-                } catch (ex: Exception) {
-                    displayMessage(baseContext, "Capture File Bug: " + ex.message.toString())
-                }
-
-            }
-        }
-    }
-
-    @Throws(IOException::class)
-    private fun createCsvFile(): File {
+        var fileWriter: FileWriter? = null
         val parameters = Arrays.asList(
-            Parameter("1", "GPON Configuration", this.networkConfigurationReceived),
-            Parameter("2", "Power Transmitter", this.powerTransmitterReceived),
-            Parameter("3", "Fibre Optic Length", this.panjangFiberReceived),
-            Parameter("4", "Connector", this.totalConnectorReceived),
-            Parameter("5", "Splices", this.totalSplicesReceived),
-            Parameter("6", "Power Splitter", this.powerSplitterUsedReceived),
+            Parameter("1", "GPON Configuration", networkConfigurationReceived),
+            Parameter("2", "Power Transmitter", powerTransmitterReceived),
+            Parameter("3", "Fibre Optic Length", panjangFiberReceived),
+            Parameter("4", "Connector", totalConnectorReceived),
+            Parameter("5", "Splices", totalSplicesReceived),
+            Parameter("6", "Power Splitter", powerSplitterUsedReceived),
             Parameter("7", "Optical Fiber Loss", totalLossFiber.toString()),
             Parameter("8", "Connector Loss", totalLossConnector.toString()),
             Parameter("9", "Splicing Loss", totalLossSplicing.toString()),
@@ -403,36 +366,62 @@ class ResultActivity : AppCompatActivity() {
             Parameter("11", "Total Loss", totalLossPure.toString()),
             Parameter("12", "Power Received", totalLossResult.toString())
         )
-        // Create an csv file name
-        val csvFileName = "gpon_" + randomIdReceived + "_"
-        val storageCsvDir = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
-        val GPONData = File.createTempFile(csvFileName, ".csv", storageCsvDir)
-        var writer: FileWriter? = null
         try {
-            writer = FileWriter("gpon-" + randomIdReceived + ".csv")
-            writer.append(CSV_HEADER)
-            writer.append("\n")
+            val baseDir = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
+            val filename = "GPON_ID-"+randomIdReceived+".csv"
+
+            fileWriter = FileWriter(baseDir?.toString()+"/"+filename)
+
+            fileWriter.append(CSV_HEADER)
+            fileWriter.append('\n')
 
             for (parameter in parameters) {
-                writer.append(parameter.numberId)
-                writer.append(parameter.parameter)
-                writer.append(parameter.parValue)
-                writer.append("\n")
+                fileWriter.append(parameter.numberId)
+                fileWriter.append(',')
+                fileWriter.append(parameter.parameter)
+                fileWriter.append(',')
+                fileWriter.append(parameter.parValue)
+                fileWriter.append('\n')
             }
-            toast("Success").show()
+
+            toast("Write CSV successfully!")
+
+            val emailIntent = Intent(Intent.ACTION_SEND)
+            emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            emailIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            emailIntent.setType("*/*")
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT,"GPON RESULT ID : "+randomIdReceived)
+            emailIntent.putExtra(Intent.EXTRA_TEXT,
+                "1. GPON Configuration  : "+networkConfigurationReceived+"\n"+
+                    "2. Power Transmitter  : "+powerTransmitterReceived +"\n" +
+                    "3. Fibre Optic Length  : "+panjangFiberReceived +"\n" +
+                    "4. Connector  : "+totalConnectorReceived +"\n" +
+                    "5. Splices  : "+totalSplicesReceived +"\n" +
+                    "6. Power Splitter  : "+powerSplitterUsedReceived +"\n" +
+                    "7. Optical Fiber Loss  : "+totalLossFiber +"\n" +
+                    "8. Connector Loss  : "+totalLossConnector +"\n" +
+                    "9. Splicing Loss  : "+totalLossSplicing +"\n" +
+                    "10. Splitter Loss  : "+totalLossSplitter +"\n" +
+                    "11. Total Loss  : "+totalLossPure +"\n" +
+                    "12. Power Received  : "+totalLossResult
+            )
+            val builder:StrictMode.VmPolicy.Builder = StrictMode.VmPolicy.Builder()
+            StrictMode.setVmPolicy(builder.build())
+            val fileSend:File = File(baseDir?.toString()+"/"+filename)
+            val uriSend:Uri = FileProvider.getUriForFile(applicationContext,"ac.id.pnj.broadbandmultimedia.bm2015.fileprovider",fileSend)
+            emailIntent.putExtra(Intent.EXTRA_STREAM,uriSend)
+            startActivity(Intent.createChooser(emailIntent,"Share The Result"))
         } catch (e: Exception) {
-            toast("Failed").show()
+            toast("Writing CSV error!")
             e.printStackTrace()
         } finally {
             try {
-                writer?.close()
+                fileWriter!!.flush()
+                fileWriter.close()
             } catch (e: IOException) {
+                println("Flushing/closing error!")
                 e.printStackTrace()
             }
-            // Save a file: path for use with ACTION_VIEW intents
-            csvFilePath = GPONData.absolutePath
-            return GPONData
-
         }
     }
 }

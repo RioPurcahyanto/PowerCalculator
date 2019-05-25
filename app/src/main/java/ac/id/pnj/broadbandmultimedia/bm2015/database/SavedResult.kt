@@ -1,7 +1,7 @@
 package ac.id.pnj.broadbandmultimedia.bm2015.database
 
 data class SavedResult(val id: Long?, val randomId:String, val configGpon:String?, val powerTransmitter: String?, val fiberlength:String?, val numberOfConnector:String?,
-                       val numberOfSplicing:String?, val photoUri:String?){
+                       val numberOfSplicing:String?, val photoUri:String?, val powerSplitterUsed:String){
     companion object {
         const val TABLE_SAVED: String = "TABLE_SAVED"
         const val ID: String = "ID_"
@@ -12,5 +12,6 @@ data class SavedResult(val id: Long?, val randomId:String, val configGpon:String
         const val CONNECTOR_NUMBER: String = "CONNECTOR_NUMBER"
         const val SPLICING_NUMBER:String = "SPLICING_NUMBER"
         const val PHOTO_URI:String = "PHOTO_URI"
+        const val POWER_SPLITTERUSED = "POWER_SPLITTERUSED"
     }
 }

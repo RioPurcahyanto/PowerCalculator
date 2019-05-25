@@ -5,9 +5,9 @@ class Parameter {
     var parameter: String? = null
     var parValue: String? = null
 
-    constructor(){}
-    constructor(randomId: String?, parameter:String?,parValue:String?){
-        this.numberId = randomId
+
+    constructor(numberId: String?, parameter:String?,parValue:String?){
+        this.numberId = numberId
         this.parameter = parameter
         this.parValue= parValue
     }

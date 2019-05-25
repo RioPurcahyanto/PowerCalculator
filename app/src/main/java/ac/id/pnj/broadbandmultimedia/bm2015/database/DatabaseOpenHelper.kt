@@ -28,7 +28,8 @@ class DatabaseOpenHelper(ctx: Context) : ManagedSQLiteOpenHelper(ctx,"ValueCalcu
             SavedResult.FIBER_LENGTH to TEXT,
             SavedResult.CONNECTOR_NUMBER to TEXT,
             SavedResult.SPLICING_NUMBER to TEXT,
-            SavedResult.PHOTO_URI to TEXT
+            SavedResult.PHOTO_URI to TEXT,
+            SavedResult.POWER_SPLITTERUSED to TEXT
             )
     }
 
