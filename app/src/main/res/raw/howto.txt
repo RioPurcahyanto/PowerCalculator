@@ -1,0 +1,52 @@
+This app has 3 Main Feature: 
+1. Calculator 
+2. History 
+3. Reference &amp; About
+------------------------
+
+1. Calculator 
+To calculate value of Link Loss Budget. 
+Prepare this value: 
+a. GPON Configuration : Choose GPON Configuration to be calculated (1:4:8 or 1:4 or 1:2) 
+b. Power Transmitter (in dBm) 
+c. Fiber Length (in Kilometer) 
+d. Number of Connector (in pairs) 
+e. Number of Splicing 
+f. Power Splitter Used (automatically set based on your configuration) 
+
+NOTES: all value must be filled up. App cannot proceed to calculate if there is an empty box 
+
+Click "Calculate" Button to see the result 
+When you are in the result page, you can: 
+- take a picture by clicking "Take a Picture" Button. 
+You will be directed to Camera and after you confirm the picture will be displayed in the result page and saved in: 
+InternalStorage/Android/Data/ac.id.pnj.broadbandmultimedia.bm2015/files/Pictures 
+- Save and Print by clicking "Save and Print" Button 
+
+NOTES: Please choose email provider only. Sharing will be fail if you choose another apps. 
+
+The result will be saved in CSV (Comma Separated Value) File Format and will be send via email. 
+For quick view, the result value will be attached in the body of email. 
+- In-App Save Result by clicking "Star" Icon 
+You can save your result by clicking star button in the top right of screen. 
+The input value before this page will be saved in History page (will be explained later). 
+Your input value and picture will be the thumbnail of History Page Item 
+------------------------ 
+
+2. History 
+History is a page of saved result 
+This page is empty if you never save a result. 
+When you click star icon in the result page, this app only save your input value.  
+So when you need the result, please choose your saved item and app will generate your result. 
+ 
+TIPS: you can take a photo before you save the result so you can easily find your project
+or you can remember the ID of the result 
+ 
+If you forget to take a picture, you can still take a picture and make it as a thumbnail after data is saved in history page. 
+Please click the star icon (star will be empty in the middle) before you take a picture. After the photo saved, you can click the star icon again to save the photo as thumbnail 
+You can still share the result from this page. 
+------------------------ 
+
+3. Reference & About 
+This page contain Reference Link to Google Drive and Instruction to use this app. 
+Simply click the button and you'll be directed to document in Google Drive

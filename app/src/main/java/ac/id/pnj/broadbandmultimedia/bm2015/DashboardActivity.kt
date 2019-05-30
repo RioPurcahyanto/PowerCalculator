@@ -32,7 +32,7 @@ class DashboardActivity : AppCompatActivity() {
             startActivity(Intent(this@DashboardActivity,SavedActivity::class.java))
         }
         button_reference.onClick {
-            //
+            startActivity(Intent(this@DashboardActivity,ReferenceAboutActivity::class.java))
         }
     }
 

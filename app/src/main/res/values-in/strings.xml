@@ -7,7 +7,7 @@
     <string name="logo_broadband">Logo Broadband</string>
     <string name="button_calculator">Penghitung</string>
     <string name="button_history">Riwayat</string>
-    <string name="button_reference">Referensi</string>
+    <string name="button_reference">Referensi &amp; Tentang</string>
 
     <string-array name="list_configuration">
         <item>1:4:8</item>
@@ -61,4 +61,11 @@
     <string name="text_capture">Ambil Foto</string>
     <string name="take_screenshot">Tangkap Layar</string>
     <string name="save_and_print">Simpan dan Cetak</string>
+    <string name="how_to_use_this_app">Cara Penggunaan Aplikasi</string>
+    <string name="ref_title">Referensi Nilai yang Digunakan pada Aplikasi</string>
+    <string name="title_btn_technical_indonesia_ref">Persyaratan Teknis di Indonesia</string>
+    <string name="title_btn_corning_ref">Atenuasi Fiber Optik</string>
+    <string name="title_btn_connector_ref">Loss Konektor</string>
+    <string name="title_btn_splicing_ref">Loss Splicing</string>
+
 </resources>
