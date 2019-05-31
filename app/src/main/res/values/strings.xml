@@ -69,4 +69,54 @@
     <string name="title_btn_corning_ref">Optical Fiber Attenuation</string>
     <string name="title_btn_connector_ref">Connector Loss</string>
     <string name="title_btn_splicing_ref">Splicing Loss</string>
+    <string name="paragraph_how_to_use">
+        This app has 3 Main Feature:\n
+        1. Calculator\n
+        2. History\n
+        3. Reference &amp; About\n
+        \n
+        ------------------------\n
+        1. Calculator\n
+        To calculate value of Link Loss Budget.\n
+        Prepare this value:\n
+        a. GPON Configuration\t: Choose GPON Configuration to be calculated (1:4:8 or 1:4 or 1:2)\n
+        b. Power Transmitter\t(in dBm)\n
+        c. Fiber Length\t(in Kilometer)\n
+        d. Number of Connector\t(in pairs)\n
+        e. Number of Splicing\n
+        f. Power Splitter Used\t(automatically set based on your configuration)\n
+        NOTES: all value must be filled up. App cannot proceed to calculate if there is an empty box\n
+        \n
+        Click Calculate Button to see the result\n
+        \n
+        When you are in the result page, you can:\n
+        - take a picture by clicking Take a Picture Button.\n
+        You will be directed to Camera and after you confirm the picture will be displayed in the result page and saved in:\n
+        InternalStorage/Android/Data/ac.id.pnj.broadbandmultimedia.bm2015/files/Pictures\n
+        - Save and Print by clicking Save and Print Button\n
+        NOTES: Please choose email provider only. Sharing will be fail if you choose another apps.\n
+        The result will be saved in CSV (Comma Separated Value) File Format and will be send via email.\n
+        For quick view, the result value will be attached in the body of email.\n
+        - In-App Save Result by clicking Star Icon\n
+        You can save your result by clicking star button in the top right of screen.\n
+        The input value before this page will be saved in History page (will be explained later).\n
+        Your input value and picture will be the thumbnail of History Page Item\n
+        ------------------------\n
+        2. History\n
+        History is a page of saved result\n
+        This page is empty if you never save a result.\n
+        When you click star icon in the result page, this app only save your input value. \n
+        So when you need the result, please choose your saved item and app will generate your result.\n
+        \n
+        TIPS: you can take a photo before you save the result so you can easily find your project
+        or you can remember the ID of the result\n
+        \n
+        If you forget to take a picture, you can still take a picture and make it as a thumbnail after data is saved in history page.\n
+        Please click the star icon (star will be empty in the middle) before you take a picture. After the photo saved, you can click the star icon again to save the photo as thumbnail\n
+        You can still share the result from this page.\n
+        ------------------------\n
+        3. Reference &amp; About\n
+        This page contain Reference Link to Google Drive and Instruction to use this app.\n
+        Simply click the button and you\'ll be directed to document in Google Drive
+    </string>
 </resources>

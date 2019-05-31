@@ -16,22 +16,7 @@ class ReferenceAboutActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reference_about)
 
-//        text_how_to.text = resources.getString(R.string.paragraph_how_to_use)
-        val inputStream:InputStream = resources.openRawResource(R.raw.howto)
-        val byteArrayOutputStream:ByteArrayOutputStream = ByteArrayOutputStream()
-
-        var i: Int
-        try {
-            i = inputStream.read()
-            while (i != -1){
-                byteArrayOutputStream.write(i)
-                i = inputStream.read()
-            }
-            inputStream.close()
-        } catch (e: IOException){
-            e.printStackTrace()
-        }
-        text_how_to.text = byteArrayOutputStream.toString()
+        text_how_to.text = resources.getString(R.string.paragraph_how_to_use)
 
         referensi_dirjen.onClick {
             val refFiber = Intent(Intent.ACTION_VIEW, Uri.parse(resources.getString(R.string.fiber_reference)))
